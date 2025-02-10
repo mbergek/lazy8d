@@ -1,0 +1,76 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    ports: 
+      - "127.0.0.1:8090:80"
+    networks:
+      - internal
+    volumes:
+      - ./www/:/var/www/html/
+      - ./logs/nginx:/var/log/nginx/
+    depends_on:
+      - php
+      - mariadb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 50M
+  php:
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    restart: unless-stopped
+    networks:
+      - internal
+    volumes:
+      - ./www/:/var/www/html/
+      - ./logs/php.log:/var/log/fpm-php.www.log
+    depends_on:
+      - mariadb
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 50M
+  mariadb:
+    build:
+      context: .
+      dockerfile: mariadb/Dockerfile
+    restart: unless-stopped
+    ports: 
+      - "127.0.0.1:33306:3306"
+    networks:
+      - internal
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 100M
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    ports:
+#      - '127.0.0.1:8091:80'
+#    networks:
+#      - internal
+#    environment:
+#      - PMA_ARBITRARY=1
+#      - PMA_HOST=mysql
+#      - UPLOAD_LIMIT=128M
+#    depends_on:
+#      - mariadb
+volumes:
+  mariadb-data:
+networks:
+  internal:
+    driver: bridge

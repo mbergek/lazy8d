@@ -1,0 +1,7 @@
+# Git ignore file for Lazy8D
+config/*.sql
+dist/
+logs/nginx/*
+logs/php.log
+www
+.DS_Store
