@@ -29,7 +29,7 @@ Access the Lazy8 web site on http://localhost:8090
 
 ## Security notice
 
-Nginx is published on non-standard port 8090 and MariaDB is published on non-standard port 33306. Both are only bound to the local interface to allow remote clients to access those services. The Nginx instance should be proxied by an SSL-enabled web proxy running on the host.
+Nginx is published on non-standard port 8090 and MariaDB is published on non-standard port 33306. Both are only bound to the local interface to prevent remote clients from accessing those services. The Nginx instance should be proxied by an SSL-enabled web proxy running on the host.
 
 PHPMyAdmin can be enabled by removing the comments in the docker compose file and is, if so, published on port 8091 and it to is only bound to the local interface. It is not intended for production environments but rather to assist during development.
 
