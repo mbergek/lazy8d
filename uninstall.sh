@@ -2,6 +2,6 @@
 
 docker compose stop
 docker compose down
-docker ps -aq | xargs docker rm
-docker images -aq | xargs docker rmi
+docker ps | grep lazy8d | awk '{ print $1 }' | xargs docker rm
+docker images | grep lazy8d | awk '{ print $3 }' | xargs docker rmi
 rm -rf ./www
